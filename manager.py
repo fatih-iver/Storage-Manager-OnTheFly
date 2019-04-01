@@ -1,4 +1,5 @@
 import sys
+import pickle
 
 input_file_name = sys.argv[1]
 output_file_name = sys.argv[2]
@@ -6,6 +7,16 @@ output_file_name = sys.argv[2]
 types = {}
 records = {}
 
+with open('types.txt', 'rb') as types_f:
+	content = types_f.read()
+	if content:
+		types = pickle.loads(content)
+	
+with open('records.txt', 'rb') as records_f:
+	content = records_f.read()
+	if content:
+		records = pickle.loads(content)
+	
 def sortType(type_name):
 	return type_name.lower()
 
@@ -93,3 +104,9 @@ with open(output_file_name, 'w') as output_file:
 			#print(types)
 			#print(records)
 			#print()
+			
+with open('types.txt', 'wb') as types_f:
+	types_f.write(pickle.dumps(types))
+	
+with open('records.txt', 'wb') as records_f:
+	records_f.write(pickle.dumps(records))
