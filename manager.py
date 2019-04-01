@@ -16,9 +16,6 @@ with open('records.txt', 'rb') as records_f:
 	content = records_f.read()
 	if content:
 		records = pickle.loads(content)
-	
-def sortType(type_name):
-	return type_name.lower()
 
 def sortPrimary(record_fields): 
     return record_fields[0]
@@ -45,23 +42,18 @@ with open(output_file_name, 'w') as output_file:
 					
 					types[type_name] = field_names
 					records[type_name] = {}
-					
-					#print(action, type, type_name, field_number, field_names)
-				
+									
 				# Delete
 				elif action == "delete":
 					
 					del types[type_name]
 					del records[type_name]
 					
-					#print(action, type, type_name)
-
 				# List
 				else:
-					sorted_types = sorted(types.keys(), key =sortType)
+					sorted_types = sorted(types.keys())
 					for each_type in sorted_types:
 						output_file.write(each_type + '\n')
-					#print(action, type)
 					
 			# DML Operation
 			else:
@@ -73,23 +65,23 @@ with open(output_file_name, 'w') as output_file:
 				if action == "create":
 					field_values = operation[3:]
 					records[type_name][field_values[0]] = field_values
-					# print(action, type, type_name, field_values)
-				# Delete
+
+					# Delete
 				elif action == "delete":
 					del records[type_name][primary_key]
-					# print(action, type, type_name, primary_key)
+
 				# Update
 				elif action == "update":
 					field_values = operation[3:]
 					records[type_name][primary_key] = field_values
-					# print(action, type, type_name, primary_key, field_values)
+
 				# Search
 				elif action == "search":
 					if type_name in records and primary_key in records[type_name]:
 						for each_field in records[type_name][primary_key]:
 							output_file.write(each_field + ' ')
 						output_file.write('\n')
-					# print(action, type, type_name, primary_key)
+
 				# List
 				else:
 					sorted_records = sorted(records[type_name].values(), key = sortPrimary)
@@ -97,13 +89,6 @@ with open(output_file_name, 'w') as output_file:
 						for each_field in each_record:
 							output_file.write(each_field + ' ')
 						output_file.write('\n')
-
-					# print(action, type, type_name)
-			
-			#print(eachline.rstrip())
-			#print(types)
-			#print(records)
-			#print()
 			
 with open('types.txt', 'wb') as types_f:
 	types_f.write(pickle.dumps(types))
